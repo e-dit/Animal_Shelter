@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div>
+            <h3 class="color-header text-uppercase"> Zostałeś wylogowany </h3>
+        </div>
+            <a href="{% url 'login' %}">Zaloguj się ponownie</a>
+{% endblock %}

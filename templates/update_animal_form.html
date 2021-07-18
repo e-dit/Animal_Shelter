@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+ <h2>Edycja danych: </h2>
+<form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            {{ form.as_p }}
+    <div class="col d-flex justify-content-end mb-2 noPadding">
+        <input class="btn btn-success" type="submit" value="Edytuj dane">
+    </div>
+</form>
+{% endblock %}

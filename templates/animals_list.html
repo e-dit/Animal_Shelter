@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{#    <div style="text-align:right;">#}
+{#        <div class="border-top pt-3">#}
+{#            <a href='/animals/{{ animal.id }} %}">Dodaj nowe zwierzę</a>#}
+{#        </div>#}
+{#    </div>#}
+        <div class="border-top pt-3" style="text-align:right;">
+            <a href="{% url 'logout' %}">Wyloguj się</a>
+        </div>
+    <div class="border-top pt-3" style="text-align:center;">
+        <h1>Lista zwierząt przebywających w naszym schronisku:</h1>
+    </div>
+
+    <div style="text-align:center;">
+        <table style="width: 1600px; height: 300px;">
+        <thead>
+        <tr class="d-flex text-color-darker">
+            <th scope="col" class="col-1 left">Lp.</th>
+            <th scope="col" class="col-2">IMIĘ</th>
+            <th scope="col" class="col-2 center">PRZYBLIŻONY WIEK</th>
+            <th scope="col" class="col-2 center">RASA</th>
+            <th scope="col" class="col-2 center">PŁEĆ</th>
+            <th scope="col" class="col-2 center">UMASZCZENIE</th>
+            <th scope="col" class="col-2 center">NUMER EWIDENCYJNY</th>
+            <th scope="col" class="col-2 center">STATUS</th>
+        </tr>
+        </thead>
+            {% for animal in animals %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href= "/animals/{{ animal.id }}"> {{ animal.name }}</a></td>
+            <td>{{ animal.date_of_birth | timesince | cut:','}}</td>
+            <td>{{ animal.breed }}</td>
+            <td>{{ animal.gender }}</td>
+            <td>{{ animal.color }}</td>
+            <td>{{ animal.id }}</td>
+            <td>{{ animal.is_active }}</td>
+       </tr>
+            {% endfor %}
+        </table>
+{#      <div/>#}
+        {% for animal in page_obj %}
+       <br>
+        {% endfor %}
+        <div id="stopka">W sprawie adopcji zapraszamy do kontaktu telefonicznego</div>
+            <div class="row border-bottom border-3 p-1 m-1">
+                <div class="col d-flex justify-content-center mb-2 noPadding">
+                <form>
+                    {% if page_obj.has_previous %}
+                        <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4" value="{{ animal.previous_page_number }}" name="page">< poprzednia</button>
+                    {% endif %}
+                        <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4" value="{{ animal.number }}" name="page">{{ animal.number }}</button>
+                    {% if animal.has_next %}
+                        <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4" value="{{ animal.next_page_number }}" name="page">następna ></button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

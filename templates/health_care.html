@@ -1,0 +1,8 @@
+{% block content %}
+<h2>Karta zdrowia {{ animal.name }}</h2>
+  <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Zapisz">
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="content-section">
+        <form action='' method="POST">
+            {% csrf_token %}
+                  <h3 class="color-header text-uppercase"> Zaloguj się </h3>
+                {{ form }}
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Zaloguj się</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}
+
+

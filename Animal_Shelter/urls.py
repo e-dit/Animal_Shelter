@@ -13,9 +13,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path
+from shelter_app.views import RegistrationView, AnimalsView, NewAnimalView, UpdateAnimalView, IndexView, \
+    animal_detail, AdmissionView, OutcomeView, HealthCareView
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('index/', IndexView.as_view()),
+    path('register/', RegistrationView.as_view(), name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='login_form.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('animals/', AnimalsView.as_view(), name='animals'),
+    path('animals/new_animal/', NewAnimalView.as_view(), name='new_animal'),
+    path('animals/<int:animal_id>/', animal_detail, name='animal'),
+    path('animals/<int:animal_id>/update/', UpdateAnimalView.as_view(), name='update_animal'),
+    path('animals/<int:animal_id>/admission/', AdmissionView.as_view(), name='admission'),
+    path('animals/<int:animal_id>/outcome/', OutcomeView.as_view(), name='outcome'),
+    path('animals/<int:animal_id>/healthcare/', HealthCareView.as_view(), name='health'),
 ]
