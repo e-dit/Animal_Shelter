@@ -4,17 +4,10 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.generic import ListView, DetailView
 
 from shelter_app.forms import RegistrationForm, AnimalForm, AdmissionForm, OutcomeForm, HealthCareForm
 from shelter_app.models import Animal, Admission, Outcome, VeterinaryTreatment, Treatment
-from datetime import datetime
-
-
-class IndexView(View):
-
-    def get(self, request):
-        ctx = {"actual_date": datetime.now()}
-        return render(request, "test.html", ctx)
 
 
 class RegistrationView(View):
@@ -40,32 +33,29 @@ class RegistrationView(View):
         return HttpResponse(message)
 
 
-class AnimalsView(View):
+@method_decorator(login_required, name='dispatch')
+class AnimalsView(ListView):
     """
     View that displays all animals.
     """
 
-    def get(self, request):
-        animals = Animal.objects.all()
-        return render(request, 'animals_list.html', {'animals': animals})
+    model = Animal
+    template_name = 'animals_list.html'
+    paginate_by = 5
+    animals = Animal.objects.all()
 
 
-# @method_decorator(login_required, name='dispatch')
-# class AnimalView(View):
-#
-
-
-# @login_required
-def animal_detail(request, animal_id):
+@method_decorator(login_required, name='dispatch')
+class AnimalDetail(DetailView):
     """
-    Function that displays animal.
+    View that displays selected animal.
     """
+    model = Animal
+    template_name = 'animal.html'
+    context_object_name = 'animal'
 
-    animal = Animal.objects.get(id=animal_id)
-    return render(request, 'animal.html', {'animal': animal})
 
-
-# # @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class NewAnimalView(View):
     """
     Form witch creates new animal in database.
@@ -87,10 +77,10 @@ class NewAnimalView(View):
             Animal.objects.create(name=name, date_of_birth=date_of_birth, breed=breed, gender=gender, color=color,
                                   chip_number=chip_number)
 
-            return HttpResponseRedirect('animals/')
+            return HttpResponseRedirect('/animals')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class UpdateAnimalView(View):
     """
     Form witch updates animal in database.
@@ -112,10 +102,10 @@ class UpdateAnimalView(View):
             chip_number = form.cleaned_data['chip_number']
             Animal.objects.filter(id=animal_id).update(name=name, date_of_birth=date_of_birth, breed=breed,
                                                        gender=gender, color=color, chip_number=chip_number)
-            return HttpResponseRedirect('animals/')
+            return HttpResponseRedirect(f'/animals/{animal_id}')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class AdmissionView(View):
     """
     Form witch creates details for animal admission.
@@ -138,10 +128,10 @@ class AdmissionView(View):
             Admission.objects.create(animal_id=animal.pk, admission_date=admission_date, a_name=a_name,
                                      a_address=a_address, a_subject=a_subject)
 
-            return HttpResponseRedirect('animals/')
+            return HttpResponseRedirect(f'/animals/{animal_id}')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class OutcomeView(View):
     """
     Form witch creates details for animal outcome.
@@ -167,10 +157,10 @@ class OutcomeView(View):
             animal.is_active = False
             animal.save()
 
-            return redirect('animal', animal_id=animal.pk)
+            return HttpResponseRedirect(f'/animals/{animal_id}')
 
 
-# @method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name='dispatch')
 class HealthCareView(View):
     """
     Form witch creates veterinary treatments for animal.
@@ -192,4 +182,4 @@ class HealthCareView(View):
             Treatment.objects.create(animal_id=animal.pk, veterinary_treatment=veterinary_treatment,
                                      treat_date=treat_date, date_of_expire=date_of_expire)
 
-            return redirect('animal', pk=animal_id)
+            return HttpResponseRedirect(f'/animals/{animal_id}')

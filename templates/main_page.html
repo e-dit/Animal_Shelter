@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <header>
+            <h3><a>Schronisko dla zwierząt</a></h3>
+                <p>Zapraszamy</p>
+            <nav>
+                <ul>
+                    <li><p><a href="{% url 'login' %}">Zaloguj się</a></p></li>
+                        <li><p><a href="{% url 'register' %}">Zarejestruj się</a></p></li>
+                </ul>
+            </nav>
+    </header>
+{% endblock %}

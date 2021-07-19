@@ -1,28 +1,39 @@
 {%  extends 'base.html' %}
-
+{%  load static %}
 {% block content %}
-<html lang="pl">
-    <meta charset="utf-8">
-  <head>
-      <title>{{ animal.name }}</title>
-  </head>
-     <body>
-{#     <form action="" method="POST">#}
-{#            {% csrf_token %}#}
-{#    {% if user.is_authenticated %}#}
-{#            <a href='/animals/{{ animal.id }}/admission/'>Dodaj dane dotyczące przyjęcia {{ animal.name }} </a>#}
-{#            <a href='/animals/{{ animal.id }}/outcome/'>Dodaj dane dotyczące wydania</a>#}
-{#            <a href='/animals/{{ animal.id }}/healthcare/'>Dodaj dane dotyczące stanu zdrowia</a>#}
-{#            <a href='/animals/{{ animal.id }}/update/'>Edytuj dane zwierzaka</a>#}
-{#            <a href='/animals/{{ animal.id }}/{{admission.id}}/'>Edytuj dane przyjęcia</a>#}
-{#            <a href="{% url 'logout' %}">Wyloguj</a>#}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <head>
+            <div class="border-top pt-3" style="text-align:right;">
+                    <a href="{% url 'animals' %}">Powrót</a>
+                    <a href="{% url 'logout' %}">Wyloguj</a>
+             </div>
+
+        </head>
+    <body>
+    <P> Dodaj dane dotyczące:</P>
+        <p><a href={% url 'admission' animal.id %}>Przyjęcia </a>
+        <a href={% url 'health' animal.id %}>Stanu zdrowia</a>
+        <a href={% url 'outcome' animal.id %}>Wydania</a>
+
+   <P> Edytuj dane:</P>
+        <a href={% url 'update_animal' animal.id %}>{{ animal.name }}</a>
+
+    <P> </P>
+
+
 
     <div id="strona">
-        <div id="naglowek"><h1>Poznaj naszego podopiecznego</h1></div>
-        <div id="lewa"><p> <img src = "../static/images/{{ animal.name }}" class="card-img-top adopted" alt="..."></p></div>
-        <div id="prawa"><p></p>
-        <div class="ml-3 mt-3">
-            <strong>{{ animal.name }}</strong><br>
+        <div id="naglowek"><h1>Nasz podopieczny - {{ animal.name }}</h1></div>
+             </div>
+     </div>
+        <div class="content">
+            <div class="border-top pt-3" style="text-align:left;">
+             </div>
+         </div>
+             <div>
             <table>
                 <tr><td> Rasa: </td><td>{{ animal.breed }}</td></tr>
                 <tr><td> Data urodzenia: </td><td>{{ animal.date_of_birth |date:"d.m.Y"}} r.</td></tr>
@@ -36,12 +47,32 @@
                 <tr><td> W schronisku od:</td><td>
                     {% for admission in object.admission_set.all %}
                         {{ admission.admission_date |date:"d.m.Y" }} r.
-                    {% endfor %} </td></tr>
+                    </td></tr>
+                    {% endfor %}
             </table>
-        </div>
-            <div id="stopka">W sprawie adopcji zapraszamy do kontaktu telefonicznego</div>
-        </div>
-    </div>
+
+            </div>
+
+
+        <strong><P>Dane dotyczące przyjęcia :</P></strong>
+ {% for admission in object.admission_set.all %}
+<tr><td> Przyjęty: </td><td>{{ admission.admission_date }} r. </td></tr>
+     <tr><td> Oddający: </td><td>{{ admission.a_name}}</td></tr>
+     <tr><td> Adres: </td><td>{{ admission.a_address }}</td></tr>
+  {% endfor %}
+
+          <strong><P>Karta zdrowia:</P></strong>
+    <p><td> Przeprowadzone zabiegi: </td></p>
+     {% for veterinarytreatment in object.veterinarytreatment_set.all %}
+    <p><td>{{ veterinarytreatment.treat_name }}</td></p>
+    {% endfor %}
+
+            <strong><P>Dane dotyczące wydania :</P></strong>
+ {% for outcome in object.outcome_set.all %}
+     <tr><td> Wydany w dniu: </td><td>{{ outcome.outcome_date }}r. </td></tr>
+     <tr><td> Odbierający: </td><td>{{ outcome.o_name}}</td></tr>
+     <tr><td> Adres: </td><td>{{ outcome.o_address }}</td></tr>
+  {% endfor %}
      </body>
 </html>
 {% endblock %}

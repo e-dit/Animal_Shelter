@@ -24,6 +24,8 @@ class RegistrationForm(forms.ModelForm):
 
 
 class AnimalForm(forms.ModelForm):
+    chip_number = forms.IntegerField(required=False)
+
     class Meta:
         model = Animal
         fields = ['name', 'date_of_birth', 'breed', 'gender', 'color', 'chip_number']
@@ -66,15 +68,16 @@ class OutcomeForm(forms.Form):
     )
     type = forms.ChoiceField(label='Powód wydania:', choices=OUT_TYPE)
     outcome_date = forms.DateField(label='Data wydania:', widget=forms.SelectDateWidget)
-    o_name = forms.CharField(label='Podmiot odbierający:')
-    o_address = forms.CharField(label='Adres odbierającego:', max_length=128, widget=forms.TextInput(attrs={'size': '128'}))
+    o_name = forms.CharField(label='Podmiot odbierający:', required=False)
+    o_address = forms.CharField(label='Adres odbierającego:', max_length=128, required=False,
+                                widget=forms.TextInput(attrs={'size': '128'}))
     OUTCOME_SUBJECT = (
         ('O', 'Osoba fizyczna'),
         ('F', 'Fundacja'),
         ('S', 'Schronisko'),
         ('I', 'Inne'),
     )
-    subject_type = forms.ChoiceField(label='Typ odbierającego:', choices=OUTCOME_SUBJECT)
+    subject_type = forms.ChoiceField(label='Typ odbierającego:', required=False, choices=OUTCOME_SUBJECT)
     is_active = forms.BooleanField(required=False)
 
 
@@ -97,10 +100,4 @@ class HealthCareForm(forms.Form):
         ('E', 'Eutanazja'),
         ('ZG', 'Zgon'),
     )
-    date_of_expire = forms.DateField(label="Ważność wygasa:", widget=forms.SelectDateWidget)
-
-
-#
-# f = AnimalForm()
-# print(f)
-
+    date_of_expire = forms.DateField(label="Ważność wygasa:", required=False)
